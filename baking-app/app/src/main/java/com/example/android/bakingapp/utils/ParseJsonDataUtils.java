@@ -1,6 +1,5 @@
 package com.example.android.bakingapp.utils;
 
-import com.example.android.bakingapp.model.Ingredients;
 import com.example.android.bakingapp.model.RecipeSteps;
 import com.example.android.bakingapp.model.SaveRecipeData;
 
@@ -32,12 +31,28 @@ public class ParseJsonDataUtils {
 
         List<Integer> recipeIds = new ArrayList<>();
         List<String> recipeNames = new ArrayList<>();
-        List<Ingredients> ingredients = new ArrayList<>();
+        // List<String> ingredients = new ArrayList<>();
         List<RecipeSteps> recipeSteps = new ArrayList<>();
+
+        // Hold ingredients data according to each recipe id.
+        List<String> ingredientsForRecipeId1 = new ArrayList<>();
+        List<String> ingredientsForRecipeId2 = new ArrayList<>();
+        List<String> ingredientsForRecipeId3 = new ArrayList<>();
+        List<String> ingredientsForRecipeId4 = new ArrayList<>();
+
+        List<Integer> recStepsId = new ArrayList<>();
+        List<String> recStepsShortDesc = new ArrayList<>();
+        List<String> recStepsDesc = new ArrayList<>();
+        List<String> recStepsVideoUrl = new ArrayList<>();
+        List<String> recStepsThumbnailUrl = new ArrayList<>();
 
         JSONArray jsonArray = new JSONArray(bakingJsonStr);
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.optJSONObject(i);
+
+            int recipeId = jsonObject.optInt(JSON_RECIPE_ID);
+            // Hold ingredients data temporarily
+            String strIngredients = null;
 
             recipeIds.add(jsonObject.optInt(JSON_RECIPE_ID));
             recipeNames.add(jsonObject.optString(JSON_RECIPE_NAME));
@@ -51,33 +66,97 @@ public class ParseJsonDataUtils {
                 String inIngredient = ingredientObject
                         .optString(JSON_RECIPE_INGREDIENTS_INGREDIENT);
 
-                Ingredients objIngredients
-                        = new Ingredients(inQuantity, inMeasure, inIngredient);
-                ingredients.add(objIngredients);
+                strIngredients = inIngredient + " " + inQuantity + inMeasure;
+                // ingredients.add(strIngredients);
+
+                if (recipeId == 1) {
+                    ingredientsForRecipeId1.add(strIngredients);
+                }
+
+                if (recipeId == 2) {
+                    ingredientsForRecipeId2.add(strIngredients);
+                }
+
+                if (recipeId == 3) {
+                    ingredientsForRecipeId3.add(strIngredients);
+                }
+
+                if (recipeId == 4) {
+                    ingredientsForRecipeId4.add(strIngredients);
+                }
+            }
+
+            // Hold Nutella Pie ingredients
+            if (recipeId == 1 && strIngredients != null) {
+                SaveRecipeData.setFirstIngredients(ingredientsForRecipeId1);
+            }
+
+            // Hold Brownies ingredients
+            if (recipeId == 2 && strIngredients != null) {
+                SaveRecipeData.setSecondIngredients(ingredientsForRecipeId2);
+            }
+
+            // Hold Yellow Cake ingredients
+            if (recipeId == 3 && strIngredients != null) {
+                SaveRecipeData.setThirdIngredients(ingredientsForRecipeId3);
+            }
+
+            // Hold Cheesecake ingredients
+            if (recipeId == 4 && strIngredients != null) {
+                SaveRecipeData.setFourthIngredients(ingredientsForRecipeId4);
+            }
+
+            // Refresh for new recipe
+            if (recipeId == 2 || recipeId == 3 || recipeId == 4) {
+                recStepsId = new ArrayList<>();
+                recStepsShortDesc = new ArrayList<>();
+                recStepsDesc = new ArrayList<>();
+                recStepsVideoUrl = new ArrayList<>();
+                recStepsThumbnailUrl = new ArrayList<>();
             }
 
             JSONArray recipeStepsArray = jsonObject.optJSONArray(JSON_RECIPE_STEPS);
             for (int k = 0; k < recipeStepsArray.length(); k++) {
                 JSONObject recipeStepsObject = recipeStepsArray.optJSONObject(k);
 
-                int recStepsId = recipeStepsObject.optInt(JSON_RECIPE_STEPS_ID);
-                String recStepsShortDesc = recipeStepsObject
-                        .optString(JSON_RECIPE_STEPS_SHORT_DESCRIPTION);
-                String recStepsDesc = recipeStepsObject.optString(JSON_RECIPE_STEPS_DESCRIPTION);
-                String recStepsVideoUrl = recipeStepsObject.optString(JSON_RECIPE_STEPS_VIDEO_URL);
-                String recStepsThumbnailUrl = recipeStepsObject
-                        .optString(JSON_RECIPE_STEPS_THUMBNAIL_URL);
+                recStepsId.add(recipeStepsObject.optInt(JSON_RECIPE_STEPS_ID));
+                recStepsShortDesc.add(recipeStepsObject
+                        .optString(JSON_RECIPE_STEPS_SHORT_DESCRIPTION));
+                recStepsDesc.add(recipeStepsObject.optString(JSON_RECIPE_STEPS_DESCRIPTION));
+                recStepsVideoUrl.add(recipeStepsObject.optString(JSON_RECIPE_STEPS_VIDEO_URL));
+                recStepsThumbnailUrl.add(recipeStepsObject
+                        .optString(JSON_RECIPE_STEPS_THUMBNAIL_URL));
+            }
 
-                RecipeSteps objRecipeSteps = new RecipeSteps(recStepsId, recStepsShortDesc,
-                        recStepsDesc, recStepsVideoUrl, recStepsThumbnailUrl);
-                recipeSteps.add(objRecipeSteps);
+            if (recipeId == 1) {
+                RecipeSteps objFirstRecipeSteps = new RecipeSteps(recipeId, recStepsId,
+                        recStepsShortDesc, recStepsDesc, recStepsVideoUrl, recStepsThumbnailUrl);
+                recipeSteps.add(objFirstRecipeSteps);
+            }
+
+            if (recipeId == 2) {
+                RecipeSteps objSecondRecipeSteps = new RecipeSteps(recipeId, recStepsId,
+                        recStepsShortDesc, recStepsDesc, recStepsVideoUrl, recStepsThumbnailUrl);
+                recipeSteps.add(objSecondRecipeSteps);
+            }
+
+            if (recipeId == 3) {
+                RecipeSteps objThirdRecipeSteps = new RecipeSteps(recipeId, recStepsId,
+                        recStepsShortDesc, recStepsDesc, recStepsVideoUrl, recStepsThumbnailUrl);
+                recipeSteps.add(objThirdRecipeSteps);
+            }
+
+            if (recipeId == 4) {
+                RecipeSteps objFourthRecipeSteps = new RecipeSteps(recipeId, recStepsId,
+                        recStepsShortDesc, recStepsDesc, recStepsVideoUrl, recStepsThumbnailUrl);
+                recipeSteps.add(objFourthRecipeSteps);
             }
         }
 
         SaveRecipeData.setRecipeIds(recipeIds);
         SaveRecipeData.setRecipeNames(recipeNames);
 
-        SaveRecipeData.setIngredients(ingredients);
+        // SaveRecipeData.setIngredients(ingredients);
         SaveRecipeData.setRecipeSteps(recipeSteps);
 
         return SaveRecipeData.getRecipeNames();

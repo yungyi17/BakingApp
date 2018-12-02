@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.example.android.bakingapp.utils.NetworkUtils;
 import com.example.android.bakingapp.utils.ParseJsonDataUtils;
@@ -21,7 +22,8 @@ import java.net.URL;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<List<String>> {
+        implements LoaderManager.LoaderCallbacks<List<String>>,
+        MainActivityAdapter.SelectRecipeName {
 
     private RecyclerView mRecyclerView;
     private MainActivityAdapter mAdapter;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mRecyclerView = findViewById(R.id.main_recycler_view);
-        mAdapter = new MainActivityAdapter(this);
+        mAdapter = new MainActivityAdapter(this, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -102,5 +104,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(@NonNull Loader<List<String>> loader) {
 
+    }
+
+    @Override
+    public void onSelectRecipeName(List<String> ingredients, List<Integer> stepId,
+                                   List<String> stepShortDesc, List<String> stepDesc,
+                                   List<String> stepVideoUrl, List<String> stepImageUrl) {
+        Toast.makeText(this, "Ingredients: " + ingredients.size() + ", " + "STEP ID SIZE: " + stepId.size(), Toast.LENGTH_LONG).show();
     }
 }

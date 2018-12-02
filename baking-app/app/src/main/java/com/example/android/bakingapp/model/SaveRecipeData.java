@@ -6,7 +6,10 @@ public class SaveRecipeData {
 
     private static List<Integer> mRecipeIds;
     private static List<String> mRecipeNames;
-    private static List<Ingredients> mIngredients;
+    private static List<String> mFirstIngredients;
+    private static List<String> mSecondIngredients;
+    private static List<String> mThirdIngredients;
+    private static List<String> mFourthIngredients;
     private static List<RecipeSteps> mRecipeSteps;
 
     public static void setRecipeIds(List<Integer> recipeIds) {
@@ -17,8 +20,20 @@ public class SaveRecipeData {
         mRecipeNames = recipeNames;
     }
 
-    public static void setIngredients(List<Ingredients> ingredients) {
-        mIngredients = ingredients;
+    public static void setFirstIngredients(List<String> ingredients) {
+        mFirstIngredients = ingredients;
+    }
+
+    public static void setSecondIngredients(List<String> ingredients) {
+        mSecondIngredients = ingredients;
+    }
+
+    public static void setThirdIngredients(List<String> ingredients) {
+        mThirdIngredients = ingredients;
+    }
+
+    public static void setFourthIngredients(List<String> ingredients) {
+        mFourthIngredients = ingredients;
     }
 
     public static void setRecipeSteps(List<RecipeSteps> recipeSteps) {
@@ -33,8 +48,20 @@ public class SaveRecipeData {
         return mRecipeNames;
     }
 
-    public static List<Ingredients> getIngredients() {
-        return mIngredients;
+    public static List<String> getFirstIngredients() {
+        return mFirstIngredients;
+    }
+
+    public static List<String> getSecondIngredients() {
+        return mSecondIngredients;
+    }
+
+    public static List<String> getThirdIngredients() {
+        return mThirdIngredients;
+    }
+
+    public static List<String> getFourthIngredients() {
+        return mFourthIngredients;
     }
 
     public static List<RecipeSteps> getRecipeSteps() {
