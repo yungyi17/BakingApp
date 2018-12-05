@@ -1,6 +1,7 @@
 package com.example.android.bakingapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
@@ -12,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
 
+import com.example.android.bakingapp.model.SetRecipeDetailData;
 import com.example.android.bakingapp.utils.NetworkUtils;
 import com.example.android.bakingapp.utils.ParseJsonDataUtils;
 
@@ -19,7 +21,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<List<String>>,
@@ -110,6 +114,16 @@ public class MainActivity extends AppCompatActivity
     public void onSelectRecipeName(List<String> ingredients, List<Integer> stepId,
                                    List<String> stepShortDesc, List<String> stepDesc,
                                    List<String> stepVideoUrl, List<String> stepImageUrl) {
-        Toast.makeText(this, "Ingredients: " + ingredients.size() + ", " + "STEP ID SIZE: " + stepId.size(), Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "Ingredients: " + ingredients.size() + ", " + "STEP ID SIZE: " + stepId.size(), Toast.LENGTH_LONG).show();
+
+        SetRecipeDetailData.setIngredients(ingredients);
+        SetRecipeDetailData.setStepIds(stepId);
+        SetRecipeDetailData.setStepShortDescription(stepShortDesc);
+        SetRecipeDetailData.setStepDescription(stepDesc);
+        SetRecipeDetailData.setStepVideoUrl(stepVideoUrl);
+        SetRecipeDetailData.setStepImageUrl(stepImageUrl);
+
+        Intent recipeIntent = new Intent(this, RecipeDetailActivity.class);
+        startActivity(recipeIntent);
     }
 }
