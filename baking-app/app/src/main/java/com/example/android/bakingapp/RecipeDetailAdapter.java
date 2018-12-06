@@ -19,7 +19,7 @@ public class RecipeDetailAdapter
     private SelectRecipeStep mCallback;
 
     public interface SelectRecipeStep {
-        void onRecipeStepSelected(int itemPos);
+        void onRecipeStepSelected(int itemPos, List<String> shortDesc);
     }
 
     public RecipeDetailAdapter(Context context,
@@ -66,7 +66,7 @@ public class RecipeDetailAdapter
         public void onClick(View v) {
             mCallback = (SelectRecipeStep) mContext;
             int position = getAdapterPosition();
-            mCallback.onRecipeStepSelected(position);
+            mCallback.onRecipeStepSelected(position, mShortDescription);
         }
     }
 }

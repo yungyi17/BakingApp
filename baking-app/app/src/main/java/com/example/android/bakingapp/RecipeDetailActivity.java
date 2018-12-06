@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.example.android.bakingapp.model.SetRecipeDetailData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeDetailActivity extends AppCompatActivity
@@ -29,17 +30,18 @@ public class RecipeDetailActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRecipeStepSelected(int position) {
+    public void onRecipeStepSelected(int position, List<String> shortDescription) {
         // Toast.makeText(this, "POSITION: " + position, Toast.LENGTH_SHORT).show();
         String stepDesc = SetRecipeDetailData.getStepDescription().get(position);
         String stepVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(position);
-        String stepImgUrl = SetRecipeDetailData.getStepImageUrl().get(position);
+        // String stepImgUrl = SetRecipeDetailData.getStepImageUrl().get(position);
 
         Bundle bundle = new Bundle();
-        bundle.putString("RecipeDescription", stepDesc);
-        bundle.putString("RecipeVideoUrl", stepVideoUrl);
-        bundle.putString("RecipeImageUrl", stepImgUrl);
-        bundle.putInt("Position", position);
+        bundle.putString(RecipeStepDetailActivity.RECIPE_DESCRIPTION, stepDesc);
+        bundle.putString(RecipeStepDetailActivity.RECIPE_VIDEO_URL, stepVideoUrl);
+        bundle.putInt(RecipeStepDetailActivity.RECIPE_STEP_POSITION, position);
+        bundle.putStringArrayList(RecipeStepDetailActivity.RECIPE_SHORT_DESC,
+                (ArrayList<String>) shortDescription);
 
         Intent recipeStepIntent = new Intent(this, RecipeStepDetailActivity.class);
         recipeStepIntent.putExtras(bundle);

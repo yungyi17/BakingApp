@@ -6,4 +6,7 @@
 
     <string name="recipe_previous_step">PREVIOUS</string>
     <string name="recipe_next_step">NEXT</string>
+    <string name="recipe_step_label">Recipe step instruction</string>
+
+    <string name="recipe_video_not_available">Video is not available!</string>
 </resources>
