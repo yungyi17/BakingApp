@@ -8,6 +8,8 @@
     <TextView
         android:id="@+id/main_recipe_name"
         android:background="@drawable/main_recipe_name_border"
+        android:textColor="@color/colorDarkGrey"
+        android:elevation="8dp"
         android:layout_margin="7dp"
         android:gravity="center"
         android:padding="77dp"

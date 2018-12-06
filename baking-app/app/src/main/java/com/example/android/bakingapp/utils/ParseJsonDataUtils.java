@@ -66,7 +66,7 @@ public class ParseJsonDataUtils {
                 String inIngredient = ingredientObject
                         .optString(JSON_RECIPE_INGREDIENTS_INGREDIENT);
 
-                strIngredients = inIngredient + " " + inQuantity + inMeasure;
+                strIngredients = inIngredient + " " + inQuantity + " " + inMeasure;
                 // ingredients.add(strIngredients);
 
                 if (recipeId == 1) {

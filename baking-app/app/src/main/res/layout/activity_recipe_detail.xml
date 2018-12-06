@@ -1,5 +1,46 @@
-<fragment android:id="@+id/fragment_recipe_detail"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:name="com.example.android.bakingapp.RecipeDetailActivityFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android" />
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:text="@string/recipe_detail_view"
+        android:layout_margin="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:text="@string/recipe_ingredients"
+        android:textSize="21sp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="7dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:background="@drawable/list_of_ingredients"
+        android:layout_marginLeft="7dp"
+        android:layout_marginBottom="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_width="match_parent"
+        android:layout_height="177dp">
+        <TextView
+            android:layout_margin="7dp"
+            android:paddingLeft="11dp"
+            android:textSize="17sp"
+            android:id="@+id/display_ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
+
+    <fragment android:id="@+id/fragment_recipe_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.example.android.bakingapp.RecipeDetailActivityFragment"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
+</LinearLayout>
