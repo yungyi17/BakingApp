@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecipeStepDetailActivity">
+
+    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+        android:id="@+id/recipe_step_video"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/recipe_step_video_not_available"
+        android:text="@string/recipe_video_not_available"
+        android:visibility="invisible"
+        android:gravity="center"
+        android:background="@android:color/holo_red_dark"
+        android:padding="17dp"
+        android:textColor="@android:color/white"
+        style="@style/Base.TextAppearance.AppCompat.Display2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:text="@string/recipe_step_label"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginTop="37dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/recipe_step_description"
+        android:textSize="21sp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginRight="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="187dp" />
+
+    <FrameLayout
+        android:layout_marginTop="27dp"
+        android:layout_marginRight="11dp"
+        android:layout_marginLeft="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/previous_step"
+            android:text="@string/recipe_previous_step"
+            android:textSize="17sp"
+            android:layout_marginLeft="17dp"
+            android:textColor="@color/colorBlue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/next_step"
+            android:text="@string/recipe_next_step"
+            android:textSize="17sp"
+            android:textColor="@color/colorBlue"
+            android:layout_gravity="right"
+            android:layout_marginRight="17dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+</LinearLayout>

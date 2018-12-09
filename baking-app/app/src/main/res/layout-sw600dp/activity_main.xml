@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<GridLayout
+    android:id="@+id/grid_linear_layout"
+    android:columnCount="2"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/colorPrimary"
@@ -13,4 +15,4 @@
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+</GridLayout>

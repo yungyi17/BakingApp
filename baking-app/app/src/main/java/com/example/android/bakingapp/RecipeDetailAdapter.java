@@ -1,6 +1,7 @@
 package com.example.android.bakingapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import java.util.List;
 
 public class RecipeDetailAdapter
         extends RecyclerView.Adapter<RecipeDetailAdapter.RecipeDetailViewHolder> {
+
+    static int selectedPosition = 0;
 
     private List<String> mShortDescription;
 
@@ -42,6 +45,11 @@ public class RecipeDetailAdapter
     public void onBindViewHolder(@NonNull RecipeDetailViewHolder recipeViewHolder,
                                  int position) {
         String stepShortDescription = mShortDescription.get(position);
+
+        recipeViewHolder.itemView
+                .setBackgroundColor(selectedPosition
+                        == position ? Color.GRAY : Color.TRANSPARENT);
+
         recipeViewHolder.mStepShortDesc.setText(stepShortDescription);
     }
 
@@ -64,8 +72,14 @@ public class RecipeDetailAdapter
 
         @Override
         public void onClick(View v) {
-            mCallback = (SelectRecipeStep) mContext;
             int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION) return;
+
+            notifyItemChanged(selectedPosition);
+            selectedPosition = getAdapterPosition();
+            notifyItemChanged(selectedPosition);
+
+            mCallback = (SelectRecipeStep) mContext;
             mCallback.onRecipeStepSelected(position, mShortDescription);
         }
     }
