@@ -33,8 +33,8 @@ public class RecipeDetailActivity extends AppCompatActivity
     private TextView mDispInitText;
     private List<String> displayIngredients;
 
-    // Primitive type can be saved onSaveInstanceState
-    // initially, which may be leading to an error.
+    // Primitive type can be saved onSaveInstanceState initially even though
+    // no step was selected, which may be leading to an error.
     private Integer mPosition = null;
 
     private String mVideoUrl;
@@ -61,6 +61,8 @@ public class RecipeDetailActivity extends AppCompatActivity
 
             // Avoid displaying blank, display initial text when a tablet runs initially
             if (initCounter == 1) {
+                // No highlight for a step
+                RecipeDetailAdapter.selectedPosition = 1000;
                 mDispInitText = findViewById(R.id.init_text_view);
                 mDispInitText.setVisibility(View.VISIBLE);
                 mDispInitText.setTextSize(27);
@@ -141,8 +143,10 @@ public class RecipeDetailActivity extends AppCompatActivity
             mVideoNotAvailable.setVisibility(View.GONE);
             mPlayerView.setVisibility(View.VISIBLE);
 
-            // As a user clicks another step on a tablet, the video that
-            // corresponds to the step should be displayed properly.
+            // As a user clicks another step on a tablet, the video that corresponds
+            // to the step is not playing properly. The video for the step that a user
+            // clicked first keeps playing even though another step is clicked because
+            // mExoPlayer is NOT null.
             if (pos != mPreviousPos) mExoPlayer = null;
 
             if (mExoPlayer == null) {

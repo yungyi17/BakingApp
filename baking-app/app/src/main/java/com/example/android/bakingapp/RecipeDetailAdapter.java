@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,9 @@ import java.util.List;
 public class RecipeDetailAdapter
         extends RecyclerView.Adapter<RecipeDetailAdapter.RecipeDetailViewHolder> {
 
-    static int selectedPosition = 0;
+    static int selectedPosition = 1000;
+
+    private static final String TAG = RecipeDetailAdapter.class.getSimpleName();
 
     private List<String> mShortDescription;
 
