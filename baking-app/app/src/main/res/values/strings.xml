@@ -11,4 +11,6 @@
     <string name="recipe_video_not_available">Video is not available!</string>
 
     <string name="recipe_step_detail_initializer">Select a step you would like to see from the left side</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
