@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.android.bakingapp.model.SetRecipeDetailData;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -38,11 +37,12 @@ public class RecipeDetailActivity extends AppCompatActivity
     private Integer mPosition = null;
 
     private String mVideoUrl;
+    private String stepDesc;
 
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
 
-    private boolean mTwoPane;
+    public static boolean mTwoPane;
     private int mPreviousPos = 1000;
     private int initCounter = 0;
 
@@ -98,12 +98,12 @@ public class RecipeDetailActivity extends AppCompatActivity
             displayTabletLayout(position);
             mPreviousPos = position;
         } else {
-            String stepDesc = SetRecipeDetailData.getStepDescription().get(position);
-            String stepVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(position);
+            stepDesc = SetRecipeDetailData.getStepDescription().get(position);
+            mVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(position);
 
             Bundle bundle = new Bundle();
             bundle.putString(RecipeStepDetailActivity.RECIPE_DESCRIPTION, stepDesc);
-            bundle.putString(RecipeStepDetailActivity.RECIPE_VIDEO_URL, stepVideoUrl);
+            bundle.putString(RecipeStepDetailActivity.RECIPE_VIDEO_URL, mVideoUrl);
             bundle.putInt(RecipeStepDetailActivity.RECIPE_STEP_POSITION, position);
             bundle.putStringArrayList(RecipeStepDetailActivity.RECIPE_SHORT_DESC,
                     (ArrayList<String>) shortDescription);

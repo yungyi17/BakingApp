@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Toast;
 
 import com.example.android.bakingapp.model.SetRecipeDetailData;
 import com.example.android.bakingapp.utils.NetworkUtils;
@@ -22,9 +21,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<List<String>>,
@@ -32,6 +29,8 @@ public class MainActivity extends AppCompatActivity
 
     private RecyclerView mRecyclerView;
     private MainActivityAdapter mAdapter;
+
+    private List<String> mRecipeNameHolder;
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int RECIPE_LOADER_ID = 3377;
@@ -110,7 +109,8 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(@NonNull Loader<List<String>> loader, List<String> strings) {
         if (strings != null) {
-            mAdapter.setRecipeNames(strings);
+            mRecipeNameHolder = strings;
+            mAdapter.setRecipeNames(mRecipeNameHolder);
         }
     }
 

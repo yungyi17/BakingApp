@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/recipe_step_label"
         android:text="@string/recipe_step_short_description"
         android:textSize="21sp"
         android:layout_marginTop="17dp"

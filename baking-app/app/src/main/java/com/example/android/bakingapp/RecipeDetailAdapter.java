@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,9 +48,12 @@ public class RecipeDetailAdapter
                                  int position) {
         String stepShortDescription = mShortDescription.get(position);
 
-        recipeViewHolder.itemView
-                .setBackgroundColor(selectedPosition
-                        == position ? Color.GRAY : Color.TRANSPARENT);
+        // Only if the highlight is on tablet version
+        if (RecipeDetailActivity.mTwoPane) {
+            recipeViewHolder.itemView
+                    .setBackgroundColor(selectedPosition
+                            == position ? Color.GRAY : Color.TRANSPARENT);
+        }
 
         recipeViewHolder.mStepShortDesc.setText(stepShortDescription);
     }
