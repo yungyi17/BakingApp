@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.model.SetRecipeDetailData;
@@ -20,6 +21,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,21 +30,26 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
 
     public static final String RECIPE_DESCRIPTION = "recipe-description";
     public static final String RECIPE_VIDEO_URL = "recipe-video-url";
+    public static final String RECIPE_THUMBNAIL_URL = "recipe-thumbnail-url";
     public static final String RECIPE_STEP_POSITION = "recipe-step-position";
     public static final String RECIPE_SHORT_DESC = "recipe-short-desc";
+    public static final String RECIPE_SHORT_DESC_ARRAY_LIST = "recipe-short-desc-array-list";
 
     private static final String TAG = RecipeStepDetailActivity.class.getSimpleName();
 
     private String mDescription;
     private String mVideoUrl;
-    private List<String> mShortDescList;
+    private String mStepImageUrl;
+    private String mShortDesc;
+    private List<String> mShortDescArrayList;
 
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
     private RecipeDetailAdapter mAdapter;
 
     private TextView mDescriptionTextView;
-    private TextView mVideoNotAvailable;
+    private TextView mShortDescriptionTextView;
+    private ImageView mVideoNotAvailable;
     private TextView mPreviousStep;
     private TextView mNextStep;
 
@@ -53,6 +60,7 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
 
         mPlayerView = findViewById(R.id.recipe_step_video);
         mDescriptionTextView = findViewById(R.id.recipe_step_description);
+        mShortDescriptionTextView = findViewById(R.id.recipe_short_description);
         mVideoNotAvailable = findViewById(R.id.recipe_step_video_not_available);
         mPreviousStep = findViewById(R.id.previous_step);
         mNextStep = findViewById(R.id.next_step);
@@ -60,14 +68,16 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mDescription = intent.getStringExtra(RECIPE_DESCRIPTION);
         mVideoUrl = intent.getStringExtra(RECIPE_VIDEO_URL);
-        mShortDescList = intent.getStringArrayListExtra(RECIPE_SHORT_DESC);
+        mStepImageUrl = intent.getStringExtra(RECIPE_THUMBNAIL_URL);
+        mShortDesc = intent.getStringExtra(RECIPE_SHORT_DESC);
+        mShortDescArrayList = intent.getStringArrayListExtra(RECIPE_SHORT_DESC_ARRAY_LIST);
         int mPosition = intent.getIntExtra(RECIPE_STEP_POSITION, -1);
 
         // Need adapter object to get item count and it can set new position of
         // the first or last item
-        mAdapter = new RecipeDetailAdapter(this, mShortDescList);
+        mAdapter = new RecipeDetailAdapter(this, mShortDescArrayList);
 
-        displayRecipeStep(mDescription, mPosition);
+        displayRecipeStep(mDescription, mShortDesc, mPosition);
 
         Uri builtUri = Uri.parse(mVideoUrl).buildUpon().build();
         initializeVideoPlayer(builtUri);
@@ -78,6 +88,27 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         if (mVideoUrl.isEmpty()) {
             mPlayerView.setVisibility(View.GONE);
             mVideoNotAvailable.setVisibility(View.VISIBLE);
+
+            String imageExtensions = ".png .jpg .jpeg .gif .bmp";
+
+            if (!mStepImageUrl.isEmpty() && mStepImageUrl.contains(imageExtensions)) {
+                Picasso.with(this)
+                        .load(mStepImageUrl)
+                        .into(mVideoNotAvailable);
+            } else if (!mStepImageUrl.isEmpty() && !mStepImageUrl.contains(imageExtensions)) {
+                Picasso.with(this)
+                        .load(mStepImageUrl)
+                        .error(R.drawable.error_message)
+                        .into(mVideoNotAvailable);
+            } else if (mStepImageUrl.isEmpty()) {
+                mStepImageUrl = null;
+                Picasso.with(this)
+                        .load(mStepImageUrl)
+                        .placeholder(R.drawable.place_holder)
+                        .into(mVideoNotAvailable);
+                mStepImageUrl = "";
+            }
+
         // If video is available
         } else {
             mVideoNotAvailable.setVisibility(View.GONE);
@@ -102,8 +133,9 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void displayRecipeStep(String description, final int position) {
+    private void displayRecipeStep(String description, String shortDesc, final int position) {
         mDescriptionTextView.setText(description);
+        mShortDescriptionTextView.setText(shortDesc);
 
         // Get item count from the adapter
         final int itemCnt = mAdapter.getItemCount();
@@ -116,13 +148,17 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
                     prevPos = itemCnt - 1;
                 }
                 mDescription = SetRecipeDetailData.getStepDescription().get(prevPos);
+                mShortDesc = SetRecipeDetailData.getStepShortDescription().get(prevPos);
                 mVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(prevPos);
+                mStepImageUrl = SetRecipeDetailData.getStepImageUrl().get(prevPos);
 
                 Bundle bundle = new Bundle();
                 bundle.putString(RECIPE_DESCRIPTION, mDescription);
+                bundle.putString(RECIPE_SHORT_DESC, mShortDesc);
                 bundle.putString(RECIPE_VIDEO_URL, mVideoUrl);
+                bundle.putString(RECIPE_THUMBNAIL_URL, mStepImageUrl);
                 bundle.putInt(RECIPE_STEP_POSITION, prevPos);
-                bundle.putStringArrayList(RECIPE_SHORT_DESC, (ArrayList<String>) mShortDescList);
+                bundle.putStringArrayList(RECIPE_SHORT_DESC_ARRAY_LIST, (ArrayList<String>) mShortDescArrayList);
 
                 Intent previousIntent = new Intent(getApplicationContext(), RecipeStepDetailActivity.class);
                 previousIntent.putExtras(bundle);
@@ -138,13 +174,17 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
                     nextPos = 0;
                 }
                 mDescription = SetRecipeDetailData.getStepDescription().get(nextPos);
+                mShortDesc = SetRecipeDetailData.getStepShortDescription().get(nextPos);
                 mVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(nextPos);
+                mStepImageUrl = SetRecipeDetailData.getStepImageUrl().get(nextPos);
 
                 Bundle b = new Bundle();
                 b.putString(RECIPE_DESCRIPTION, mDescription);
+                b.putString(RECIPE_SHORT_DESC, mShortDesc);
                 b.putString(RECIPE_VIDEO_URL, mVideoUrl);
+                b.putString(RECIPE_THUMBNAIL_URL, mStepImageUrl);
                 b.putInt(RECIPE_STEP_POSITION, nextPos);
-                b.putStringArrayList(RECIPE_SHORT_DESC, (ArrayList<String>) mShortDescList);
+                b.putStringArrayList(RECIPE_SHORT_DESC_ARRAY_LIST, (ArrayList<String>) mShortDescArrayList);
 
                 Intent nextStepIntent = new Intent(getApplicationContext(), RecipeStepDetailActivity.class);
                 nextStepIntent.putExtras(b);

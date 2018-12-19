@@ -13,20 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <TextView
+    <ImageView
         android:id="@+id/recipe_step_video_not_available"
-        android:text="@string/recipe_video_not_available"
         android:visibility="invisible"
-        android:gravity="center"
-        android:background="@android:color/holo_red_dark"
-        android:padding="17dp"
-        android:textColor="@android:color/white"
-        style="@style/Base.TextAppearance.AppCompat.Display2"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <TextView
-        android:text="@string/recipe_step_label"
+        android:id="@+id/recipe_short_description"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_marginLeft="11dp"

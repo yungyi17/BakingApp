@@ -26,6 +26,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:r2.2.0'
     implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
     testImplementation 'junit:junit:4.12'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 
     // Testing-only dependencies
     androidTestImplementation 'com.android.support.test:rules:1.0.2'

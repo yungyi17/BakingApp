@@ -37,7 +37,9 @@ public class RecipeDetailActivity extends AppCompatActivity
     private Integer mPosition = null;
 
     private String mVideoUrl;
+    private String mStepImageUrl;
     private String stepDesc;
+    private String mShortDesc;
 
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
@@ -100,12 +102,16 @@ public class RecipeDetailActivity extends AppCompatActivity
         } else {
             stepDesc = SetRecipeDetailData.getStepDescription().get(position);
             mVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(position);
+            mStepImageUrl = SetRecipeDetailData.getStepImageUrl().get(position);
+            mShortDesc = SetRecipeDetailData.getStepShortDescription().get(position);
 
             Bundle bundle = new Bundle();
             bundle.putString(RecipeStepDetailActivity.RECIPE_DESCRIPTION, stepDesc);
             bundle.putString(RecipeStepDetailActivity.RECIPE_VIDEO_URL, mVideoUrl);
+            bundle.putString(RecipeStepDetailActivity.RECIPE_THUMBNAIL_URL, mStepImageUrl);
+            bundle.putString(RecipeStepDetailActivity.RECIPE_SHORT_DESC, mShortDesc);
             bundle.putInt(RecipeStepDetailActivity.RECIPE_STEP_POSITION, position);
-            bundle.putStringArrayList(RecipeStepDetailActivity.RECIPE_SHORT_DESC,
+            bundle.putStringArrayList(RecipeStepDetailActivity.RECIPE_SHORT_DESC_ARRAY_LIST,
                     (ArrayList<String>) shortDescription);
 
             Intent recipeStepIntent = new Intent(this, RecipeStepDetailActivity.class);
