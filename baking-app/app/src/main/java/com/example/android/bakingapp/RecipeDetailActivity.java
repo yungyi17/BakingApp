@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.model.SetRecipeDetailData;
@@ -20,6 +22,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,7 @@ public class RecipeDetailActivity extends AppCompatActivity
         implements RecipeDetailAdapter.SelectRecipeStep {
 
     private TextView mDispIngredients;
-    private TextView mVideoNotAvailable;
+    private ImageView mVideoNotAvailable;
     private TextView mDispInitText;
     private List<String> displayIngredients;
 
@@ -45,16 +48,24 @@ public class RecipeDetailActivity extends AppCompatActivity
     private SimpleExoPlayerView mPlayerView;
 
     public static boolean mTwoPane;
+    private boolean isRestarted = false;
+    private boolean isPlayerWhenReady;
     private int mPreviousPos = 1000;
     private int initCounter = 0;
+    private long restorePlayerPosition;
+
+    private Bundle restorePlayer;
 
     private static final String SAVE_RECIPE_POSITION = "save-recipe-position";
+    private static final String VIDEO_PLAYER_POSITION = "video-player-position";
+    private static final String TAG = RecipeDetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
+        Log.d(TAG, "onCreate in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
         if (findViewById(R.id.recipe_detail_linear_layout) != null) {
             // For init text
             initCounter++;
@@ -89,6 +100,54 @@ public class RecipeDetailActivity extends AppCompatActivity
             RecipeDetailAdapter.selectedPosition = mPosition;
 
             displayTabletLayout(mPosition);
+
+            restorePlayerPosition = savedInstanceState.getLong(VIDEO_PLAYER_POSITION);
+            isPlayerWhenReady = savedInstanceState.getBoolean("playerState");
+            mExoPlayer.seekTo(restorePlayerPosition);
+            mExoPlayer.setPlayWhenReady(isPlayerWhenReady);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        if (restorePlayer != null && isRestarted) {
+            Uri builtUri = Uri.parse(mVideoUrl).buildUpon().build();
+            initializeVideoPlayer(builtUri, mPosition);
+
+            restorePlayerPosition = restorePlayer.getLong(VIDEO_PLAYER_POSITION);
+            isPlayerWhenReady = restorePlayer.getBoolean("playerState");
+            mExoPlayer.seekTo(restorePlayerPosition);
+            mExoPlayer.setPlayWhenReady(isPlayerWhenReady);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        if (mExoPlayer != null) {
+            restorePlayer = new Bundle();
+            long storePlayerPosition = mExoPlayer.getCurrentPosition();
+            restorePlayer.putLong(VIDEO_PLAYER_POSITION, storePlayerPosition);
+
+            boolean playerWhenReady = mExoPlayer.getPlayWhenReady();
+            restorePlayer.putBoolean("playerState", playerWhenReady);
+            //mExoPlayer.stop();
+            if (!mVideoUrl.isEmpty()) releasePlayer();
         }
     }
 
@@ -128,6 +187,7 @@ public class RecipeDetailActivity extends AppCompatActivity
 
         mDescription = SetRecipeDetailData.getStepDescription().get(position);
         mVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(position);
+        mStepImageUrl = SetRecipeDetailData.getStepImageUrl().get(position);
 
         mPlayerView = findViewById(R.id.recipe_step_video);
         mDescriptionTextView = findViewById(R.id.recipe_step_description);
@@ -144,8 +204,34 @@ public class RecipeDetailActivity extends AppCompatActivity
         if (mVideoUrl.isEmpty()) {
             mPlayerView.setVisibility(View.GONE);
             mVideoNotAvailable.setVisibility(View.VISIBLE);
+
+            if (pos != mPreviousPos) {
+                //mExoPlayer = null;
+                releasePlayer();
+            }
+
+            String imageExtensions = ".png .jpg .jpeg .gif .bmp";
+
+            if (!mStepImageUrl.isEmpty() && mStepImageUrl.contains(imageExtensions)) {
+                Picasso.with(this)
+                        .load(mStepImageUrl)
+                        .into(mVideoNotAvailable);
+            } else if (!mStepImageUrl.isEmpty() && !mStepImageUrl.contains(imageExtensions)) {
+                Picasso.with(this)
+                        .load(mStepImageUrl)
+                        .error(R.drawable.error_message)
+                        .into(mVideoNotAvailable);
+            } else if (mStepImageUrl.isEmpty()) {
+                mStepImageUrl = null;
+                Picasso.with(this)
+                        .load(mStepImageUrl)
+                        .placeholder(R.drawable.place_holder)
+                        .into(mVideoNotAvailable);
+                mStepImageUrl = "";
+            }
+
+        // Video is available
         } else {
-            // Video is available
             mVideoNotAvailable.setVisibility(View.GONE);
             mPlayerView.setVisibility(View.VISIBLE);
 
@@ -153,7 +239,10 @@ public class RecipeDetailActivity extends AppCompatActivity
             // to the step is not playing properly. The video for the step that a user
             // clicked first keeps playing even though another step is clicked because
             // mExoPlayer is NOT null.
-            if (pos != mPreviousPos) mExoPlayer = null;
+            if (pos != mPreviousPos) {
+                //mExoPlayer = null;
+                releasePlayer();
+            }
 
             if (mExoPlayer == null) {
                 TrackSelector trackSelector = new DefaultTrackSelector();
@@ -183,8 +272,16 @@ public class RecipeDetailActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        isRestarted = true;
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
         releasePlayer();
     }
 
@@ -193,6 +290,14 @@ public class RecipeDetailActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         if (mPosition != null) {
             outState.putInt(SAVE_RECIPE_POSITION, mPosition);
+        }
+
+        if (mExoPlayer != null) {
+            long storePlayerPosition = mExoPlayer.getCurrentPosition();
+            outState.putLong(VIDEO_PLAYER_POSITION, storePlayerPosition);
+
+            boolean playerWhenReady = mExoPlayer.getPlayWhenReady();
+            outState.putBoolean("playerState", playerWhenReady);
         }
     }
 }
