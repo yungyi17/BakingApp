@@ -13,6 +13,8 @@ import com.example.android.bakingapp.model.SaveRecipeData;
 
 import java.util.List;
 
+import butterknife.BindView;
+
 public class MainActivityAdapter
         extends RecyclerView.Adapter<MainActivityAdapter.MainActivityAdapterViewHolder> {
 
@@ -58,6 +60,7 @@ public class MainActivityAdapter
     public class MainActivityAdapterViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
         final TextView mMainRecipeName;
+        //@BindView(R.id.main_recipe_name) TextView mMainRecipeName;
 
         public MainActivityAdapterViewHolder(View itemView) {
             super(itemView);

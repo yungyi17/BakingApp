@@ -27,13 +27,19 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RecipeDetailActivity extends AppCompatActivity
         implements RecipeDetailAdapter.SelectRecipeStep {
 
     private TextView mDispIngredients;
-    private ImageView mVideoNotAvailable;
-    private TextView mDispInitText;
-    private List<String> displayIngredients;
+    //private ImageView mVideoNotAvailable;
+    //private TextView mDispInitText;
+    //@BindView(R.id.display_ingredients) TextView mDispIngredients;
+    @BindView(R.id.recipe_step_video_not_available) ImageView mVideoNotAvailable;
+    @BindView(R.id.init_text_view) TextView mDispInitText;
+    @BindView(R.id.recipe_step_description)TextView mDescriptionTextView;
 
     // Primitive type can be saved onSaveInstanceState initially even though
     // no step was selected, which may be leading to an error.
@@ -43,9 +49,11 @@ public class RecipeDetailActivity extends AppCompatActivity
     private String mStepImageUrl;
     private String stepDesc;
     private String mShortDesc;
+    private List<String> displayIngredients;
 
     private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mPlayerView;
+    //private SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.recipe_step_video) SimpleExoPlayerView mPlayerView;
 
     public static boolean mTwoPane;
     private boolean isRestarted = false;
@@ -65,8 +73,9 @@ public class RecipeDetailActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
 
-        Log.d(TAG, "onCreate in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        //Log.d(TAG, "onCreate in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
         if (findViewById(R.id.recipe_detail_linear_layout) != null) {
+            ButterKnife.bind(this);
             // For init text
             initCounter++;
             // For tablet layout
@@ -76,7 +85,7 @@ public class RecipeDetailActivity extends AppCompatActivity
             if (initCounter == 1) {
                 // No highlight for a step
                 RecipeDetailAdapter.selectedPosition = 1000;
-                mDispInitText = findViewById(R.id.init_text_view);
+                //mDispInitText = findViewById(R.id.init_text_view);
                 mDispInitText.setVisibility(View.VISIBLE);
                 mDispInitText.setTextSize(27);
                 mDispInitText.setText(getString(R.string.recipe_step_detail_initializer));
@@ -111,7 +120,7 @@ public class RecipeDetailActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        //Log.d(TAG, "onStart in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
     }
 
     @Override
@@ -132,13 +141,13 @@ public class RecipeDetailActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        //Log.d(TAG, "onPause in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        //Log.d(TAG, "onStop in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
         if (mExoPlayer != null) {
             restorePlayer = new Bundle();
             long storePlayerPosition = mExoPlayer.getCurrentPosition();
@@ -182,16 +191,16 @@ public class RecipeDetailActivity extends AppCompatActivity
     private void displayTabletLayout(int position) {
         mDispInitText.setVisibility(View.GONE);
 
-        TextView mDescriptionTextView;
+        //TextView mDescriptionTextView;
         String mDescription;
 
         mDescription = SetRecipeDetailData.getStepDescription().get(position);
         mVideoUrl = SetRecipeDetailData.getStepVideoUrl().get(position);
         mStepImageUrl = SetRecipeDetailData.getStepImageUrl().get(position);
 
-        mPlayerView = findViewById(R.id.recipe_step_video);
-        mDescriptionTextView = findViewById(R.id.recipe_step_description);
-        mVideoNotAvailable = findViewById(R.id.recipe_step_video_not_available);
+        //mPlayerView = findViewById(R.id.recipe_step_video);
+        //mDescriptionTextView = findViewById(R.id.recipe_step_description);
+        //mVideoNotAvailable = findViewById(R.id.recipe_step_video_not_available);
 
         mDescriptionTextView.setText(mDescription);
 
@@ -274,14 +283,14 @@ public class RecipeDetailActivity extends AppCompatActivity
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "onRestart in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        //Log.d(TAG, "onRestart in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
         isRestarted = true;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
+        //Log.d(TAG, "onDestroy in RecipeDetailActivity" + " PLAYER: " + mExoPlayer);
         releasePlayer();
     }
 

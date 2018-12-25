@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.BindView;
+
 public class RecipeDetailAdapter
         extends RecyclerView.Adapter<RecipeDetailAdapter.RecipeDetailViewHolder> {
 
@@ -68,6 +70,7 @@ public class RecipeDetailAdapter
             implements View.OnClickListener {
 
         final TextView mStepShortDesc;
+        //@BindView(R.id.step_short_description) TextView mStepShortDesc;
 
         public RecipeDetailViewHolder(View view) {
             super(view);

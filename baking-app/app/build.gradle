@@ -28,6 +28,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
+    implementation 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+
     // Testing-only dependencies
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

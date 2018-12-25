@@ -23,11 +23,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<List<String>>,
         MainActivityAdapter.SelectRecipeName {
 
-    private RecyclerView mRecyclerView;
+    //private RecyclerView mRecyclerView;
+    @BindView(R.id.main_recycler_view) RecyclerView mRecyclerView;
     private MainActivityAdapter mAdapter;
 
     private List<String> mRecipeNameHolder;
@@ -39,8 +43,9 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        mRecyclerView = findViewById(R.id.main_recycler_view);
+        //mRecyclerView = findViewById(R.id.main_recycler_view);
         mAdapter = new MainActivityAdapter(this, this);
 
         if (findViewById(R.id.grid_linear_layout) != null) {

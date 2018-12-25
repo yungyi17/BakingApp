@@ -2,10 +2,8 @@ package com.example.android.bakingapp;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,6 +26,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class RecipeStepDetailActivity extends AppCompatActivity {
 
     public static final String RECIPE_DESCRIPTION = "recipe-description";
@@ -48,14 +49,20 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     private long restorePlayerPosition;
 
     private SimpleExoPlayer mExoPlayer;
-    private SimpleExoPlayerView mPlayerView;
+    //private SimpleExoPlayerView mPlayerView;
+    @BindView(R.id.recipe_step_video) SimpleExoPlayerView mPlayerView;
     private RecipeDetailAdapter mAdapter;
 
-    private TextView mDescriptionTextView;
-    private TextView mShortDescriptionTextView;
-    private ImageView mVideoNotAvailable;
-    private TextView mPreviousStep;
-    private TextView mNextStep;
+    //private TextView mDescriptionTextView;
+    //private TextView mShortDescriptionTextView;
+    //private ImageView mVideoNotAvailable;
+    //private TextView mPreviousStep;
+    //private TextView mNextStep;
+    @BindView(R.id.recipe_step_description) TextView mDescriptionTextView;
+    @BindView(R.id.recipe_short_description) TextView mShortDescriptionTextView;
+    @BindView(R.id.recipe_step_video_not_available) ImageView mVideoNotAvailable;
+    @BindView(R.id.previous_step) TextView mPreviousStep;
+    @BindView(R.id.next_step) TextView mNextStep;
 
     private boolean isPlayerWhenReady;
     private boolean isRestarted = false;
@@ -66,13 +73,14 @@ public class RecipeStepDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_step_detail);
+        ButterKnife.bind(this);
 
-        mPlayerView = findViewById(R.id.recipe_step_video);
-        mDescriptionTextView = findViewById(R.id.recipe_step_description);
-        mShortDescriptionTextView = findViewById(R.id.recipe_short_description);
-        mVideoNotAvailable = findViewById(R.id.recipe_step_video_not_available);
-        mPreviousStep = findViewById(R.id.previous_step);
-        mNextStep = findViewById(R.id.next_step);
+        //mPlayerView = findViewById(R.id.recipe_step_video);
+        //mDescriptionTextView = findViewById(R.id.recipe_step_description);
+        //mShortDescriptionTextView = findViewById(R.id.recipe_short_description);
+        //mVideoNotAvailable = findViewById(R.id.recipe_step_video_not_available);
+        //mPreviousStep = findViewById(R.id.previous_step);
+        //mNextStep = findViewById(R.id.next_step);
 
         Intent intent = getIntent();
         mDescription = intent.getStringExtra(RECIPE_DESCRIPTION);
