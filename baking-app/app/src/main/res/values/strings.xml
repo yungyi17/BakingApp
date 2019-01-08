@@ -13,4 +13,12 @@
     <string name="recipe_step_detail_initializer">Select a step you would like to see from the left side</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+    <string name="nutella_pie">Nutella Pie</string>
+    <string name="brownies">Brownies</string>
+    <string name="yellow_cake">Yellow Cake</string>
+    <string name="cheesecake">Cheesecake</string>
+
+    <string name="btn_ingredients">Update Ingredients</string>
+    <string name="recipe_selection_label">Select a recipe for the ingredients</string>
 </resources>

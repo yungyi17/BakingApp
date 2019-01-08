@@ -3,21 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ddd"
-    android:padding="@dimen/widget_margin">
+    android:padding="7dp">
 
     <TextView
         android:id="@+id/widget_recipe_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="@drawable/widget_border"
-        android:padding="11dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
         android:textColor="#777"
         android:textSize="17sp"
         android:textStyle="italic" />
+    <!--android:background="@drawable/widget_border"-->
 
 </RelativeLayout>

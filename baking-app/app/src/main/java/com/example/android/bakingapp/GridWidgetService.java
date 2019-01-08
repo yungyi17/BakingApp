@@ -2,7 +2,7 @@ package com.example.android.bakingapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -19,18 +19,23 @@ import java.util.List;
 public class GridWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        return new GridRemoteViewsFactory(this.getApplicationContext());
+        return new GridRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }
 
 class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private Context mContext;
-    private List<String> mWidgetRecipeName;
-    private List<Integer> mWidgetRecipeId;
+    private static final String TAG = "GridWidgetService";
+    private static final String PREFS_NAME_FOR_RECIPE_ID = "prefs-name-for-recipe-id";
+    private static final String PREF_PREFIX_KEY = "prefix_";
 
-    public GridRemoteViewsFactory(Context applicationContext) {
+    private Context mContext;
+    private List<String> mWidgetRecipeIngredients;
+    private int mAppWidgetId;
+
+    public GridRemoteViewsFactory(Context applicationContext, Intent intent) {
         mContext = applicationContext;
+        this.mAppWidgetId = intent.getIntExtra("appWidgetIdForIngredients", -1);
     }
 
     @Override
@@ -40,29 +45,20 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public int getCount() {
-        if (mWidgetRecipeName == null) return 0;
-        return mWidgetRecipeName.size();
+        if (mWidgetRecipeIngredients == null) return 0;
+        return mWidgetRecipeIngredients.size();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        if (mWidgetRecipeId == null || mWidgetRecipeId.size() == 0) return null;
+        if (mWidgetRecipeIngredients == null || mWidgetRecipeIngredients.size() == 0) return null;
 
-        String recipeName = mWidgetRecipeName.get(position);
-        int recipeId = mWidgetRecipeId.get(position);
+        String recipeIngredient = mWidgetRecipeIngredients.get(position);
 
         RemoteViews views = new RemoteViews(mContext
                 .getPackageName(), R.layout.recipe_ingredient_widget);
 
-        views.setTextViewText(R.id.widget_recipe_name, recipeName);
-
-        // Fill in the onClick PendingIntent Template using the specific recipe Id
-        // for each item individually
-        Bundle extras = new Bundle();
-        extras.putInt(IngredientActivity.RECIPE_EXTRA_ID, recipeId);
-        Intent fillInIntent = new Intent();
-        fillInIntent.putExtras(extras);
-        views.setOnClickFillInIntent(R.id.widget_recipe_name, fillInIntent);
+        views.setTextViewText(R.id.widget_recipe_name, recipeIngredient);
 
         return views;
     }
@@ -74,19 +70,38 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
         try {
             String recipeJsonString = NetworkUtils.getResponseFromHttpUrl(getUrl);
-            mWidgetRecipeName = ParseJsonDataUtils.getRecipeNamesFromJson(recipeJsonString);
+            ParseJsonDataUtils.getRecipeNamesFromJson(recipeJsonString);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        mWidgetRecipeId = SaveRecipeData.getRecipeIds();
+        SharedPreferences prefs = mContext
+                .getSharedPreferences(PREFS_NAME_FOR_RECIPE_ID, Context.MODE_PRIVATE);
+        int recipeId = prefs.getInt(PREF_PREFIX_KEY + mAppWidgetId, -1);
+
+        switch (recipeId) {
+            case 1:
+                mWidgetRecipeIngredients = SaveRecipeData.getFirstIngredients();
+                break;
+            case 2:
+                mWidgetRecipeIngredients = SaveRecipeData.getSecondIngredients();
+                break;
+            case 3:
+                mWidgetRecipeIngredients = SaveRecipeData.getThirdIngredients();
+                break;
+            case 4:
+                mWidgetRecipeIngredients = SaveRecipeData.getFourthIngredients();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void onDestroy() {
-        mWidgetRecipeId.clear();
+        // mWidgetRecipeIngredients.clear();
     }
 
     @Override
